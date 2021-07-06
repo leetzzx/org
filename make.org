@@ -1,0 +1,86 @@
+* Make命令
+** Make的概念
+   - Make 是根据某种规则制造出某个文件的命令
+   make -f rule.txt
+   或者
+   make --file=rule.txt
+** Make文件的格式
+   Makefile文件由一系列规则（rule）组成
+   <target>:<prerequisites>
+   [tab]<commands>
+   - 上面的第一行冒号前面的部分叫做“目标”，冒号后面的部分叫做前置条件；
+     第二行必须由一个tab键起首，后面跟着命令。
+** 目标
+   - 一个目标通常是文件名，指明Make命令所要构建的对象。
+   - 也可以是多个文件名
+   - 也可以是某个操作的名字，这称为伪目标（phony target）
+#+begin_src makefile
+  .PHONY: clean
+  clean:
+	  rm *.o temp
+#+end_src
+   - 当没有指定目标make时，默认使用第一个目标
+** 前置条件
+   - 前置条件通常是一组文件名，之间用空格分隔。
+   - 它指定了“目标”是否重新构建的判断标准：只要有一个前置文件不存在，
+     或者有过更新（前置文件的last-modification时间戳比目标的时间戳新），
+     目标就需要重新构建。
+#+begin_src makefile
+  result.txt: source.txt
+	cp source.txt result.txt
+#+end_src
+** 命令（commands）
+   - 命令表示需要如何更新目标文件，由一行或多行的shell命令组成。
+   - 它的运行结果通常是生成目标文件
+   - 每行命令之前必须要有一个tab键。如果想用其他键，可以用内置变
+     量.RECIPEPREFIX声明
+#+begin_src makefile
+  .RECIPREFIX = >
+  all:
+  > echo hello, world
+#+end_src
+   - 每行的命令是在单独的一个shell中执行，shell之间没有继承关系
+   - 但是你可以把多个命令写在一行，然后用;分隔开
+   - 或者使用反斜杠\在换行符前转义
+#+begin_src makefile
+    .ONESHELL:
+    var-kept:
+	  export foo=bar;
+	  echo "foo=[$$foo]"
+#+end_src
+** Makefile文件的语法
+   - makefile使用#进行注释
+   - 回声，make会打印每条命令，包括注释，然后再执行
+   - 在该行命令前面加上@，就可以关闭回声，这意味着前面的<tab>键后面跟
+     着@
+   - 由于在构建过程中，需要了解当前在执行哪条命令，所以通常只在注释和
+     纯显示的echo命令前面加上@
+   - 通配符，包括*（替代多个），?（替代一个字符），[...]
+   - 模式匹配，允许对文件名，进行类似正则运算的匹配，主要用到的是%
+   - 变量与赋值符，允许使用等号自定义变量。不同于bash变量，可以直接定
+     义。在调用时，变量需要放在$()中
+   - 调用bash变量时，需要在美元符号前，再加一个美元符号，$$HOME，这是
+     因为Make会对美元符号转义
+   - 四个赋值运算符
+     1. = 在执行时扩展，允许递归扩展
+     2. =: 在定义时扩展
+     3. ?= 只有在未定义时才设置值
+     4. += 将值追加到变量的尾端
+   - 内置变量（implicit Variable）
+     1. $(CC) 指向当前使用的编译器
+   - 自动变量
+     1. $@ 指代当前目标
+     2. $< 指代第一个前置条件
+     3. $? 指代比目标更新的所有前置条件
+     4. $^ 指代所有前置条件
+     5. $% 指代匹配符%匹配的部分
+     6. $(@D) $(@F) 分别指向$@的目录名和文件名
+   - 判断和循环
+     1. makefile 使用bash语法，完成判断和循环
+   - 函数
+     1. shell函数 用来执行shell命令
+     2. wildcard函数 用来替代Bash的通配符
+     3. subst函数 用来进行文本替换
+     4. patsubst函数 用于模式匹配的替换
+     5. 替代后缀名 是patsubst的简写形式
+     

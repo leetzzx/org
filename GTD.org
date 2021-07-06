@@ -1,0 +1,14 @@
+* DONE learn lisp
+  DEADLINE: <2021-07-02 Fri> SCHEDULED: <2021-07-02 Fri>
+** lisp string
+* DONE Read Summer Practice Pdf
+* DONE Read Make manual
+  - org file [[file:make.org][make.org]]
+* TODO Read ctag fontend
+* DONE Tidying up the "global" note
+  - org file [[file:gtags.org][global.org]]
+* DONE Read Ctag manual
+* DONE Read Gtag manual
+* TODO Read gcc manual 
+* TODO to know what is valgrind
+* TODO Reading Principles of computer Organization

@@ -1,0 +1,13 @@
+* what is gtags
+  - gtags is a tagging system of souce code. it can tag the functions
+    in code file, then find specific function using global.
+  - It contains three database.
+    1. GTAGS difinition database
+    2. GRTAGS reference database
+    3. GPATH path name database
+  - these database will take up huge space size. take careful when
+    using it.
+* Basic commands
+  1) gtags ;; to make three tag files at current directory
+  2) global func1 ;; to find where is the func1
+  3) vim `global func1` ;; to use vim edit the source file containing the func
